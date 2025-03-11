@@ -13,7 +13,11 @@ export const registerUser = async (req, res) => {
     console.log(userData);
     const usernameExist = await User.findOne({ username });
     if (usernameExist) {
-      return res.status(400).json({ message: "Username already exists." });
+      return res.json({
+        status: "error",
+        message: "Username already exists.",
+        data: {},
+      });
     }
     //* Encrypt Hash
     const saltRounds = 10;
@@ -26,7 +30,11 @@ export const registerUser = async (req, res) => {
     });
     //* Saved user
     const savedUser = await newUser.save();
-    res.status(200).json(savedUser);
+    res.json({
+      status:"success",
+      message:"Register successfully",
+      data:savedUser
+    });
   } catch (error) {
     console.error("Error is: ", error);
   }
@@ -36,6 +44,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log(username, password);
     // 1. ตรวจสอบว่าใส่ User และ Password
     const missingFields = [];
     if (!username) missingFields.push("Username");
@@ -49,13 +58,21 @@ export const loginUser = async (req, res) => {
     // 2. ตรวจสอบว่ามี Username นี้ใน Database หรือไม่
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ message: "Username not found." });
+      return res.json({
+        status: "error",
+        message: "Username not found.",
+        data: {},
+      });
     }
 
     // 3. เปรียบเทียบ Password ที่รับเข้ามากับ Password ใน Database
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password." });
+      return res.json({
+        status: "error",
+        message: "Invalid password.",
+        data: {},
+      });
     }
 
     // 4. สร้าง JWT Token
@@ -66,7 +83,15 @@ export const loginUser = async (req, res) => {
     );
 
     // 5. ส่ง Token กลับไปที่ Client
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      data: {
+        firstname: user.firstname,
+        username,
+        token,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
