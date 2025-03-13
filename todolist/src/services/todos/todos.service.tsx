@@ -1,54 +1,76 @@
 import axiosInstance from "../axios-instance";
 import { TypeDataAPI } from "../../types/api";
 
-import { TTodos } from "@/types/todos/todos";
+import { TCraeteTodos, TTodos, TUpdateTodos } from "@/types/todos/todos";
 
 const APIPages = {
-    GetTodos: '/todos',
-    PostCreateUser: '/manage-user/create-user',
-    PutUpdateUser: '/manage-user/update-user',
-    PutDeleteUser: '/manage-user/delete-user'
-}
-
-export const fetchTotoList: () => Promise<TypeDataAPI<TTodos[]>> = async () => {
-    try {
-        const { data } = await axiosInstance.get(APIPages.GetTodos);
-        return data ?? { data: [] as TTodos[] };
-
-    } catch (error) {
-        return { data: [] as TTodos[] };
-    }
+  GetTodos: "/todos",
+  PostCreateTodos: "/todos",
+  UpdateTodos: "/todos",
 };
 
-// export const fetchPostCreateUser: (reqData: TCreateUser) => Promise<TypeDataAPI<TUserList>> = async (reqData) => {
-//     try {
-//         const { data } = await axiosInstance.post(APIPages.PostCreateUser, reqData);
-//         return data ?? { data: [] as TUserList[] };
+export const fetchTotoList: () => Promise<TypeDataAPI<TTodos[]>> = async () => {
+  try {
+    const { data } = await axiosInstance.get(APIPages.GetTodos);
+    return data ?? { data: [] as TTodos[] };
+  } catch (error) {
+    return { data: [] as TTodos[] };
+  }
+};
 
-//     } catch (error) {
-//         console.error('Error fetching user list: ', error);
-//         return { data: [] as TUserList[] };
-//     }
-// };
+export const fetchPostCreateTodos: (
+  reqData: TCraeteTodos
+) => Promise<TypeDataAPI<[]>> = async (reqData) => {
+  try {
+    const { data } = await axiosInstance.post(
+      APIPages.PostCreateTodos,
+      reqData
+    );
+    return data ?? { data: [] as TCraeteTodos[] };
+  } catch (error) {
+    console.error(error);
+    return { data: [] as TCraeteTodos[] };
+  }
+};
 
-// export const fetchPutUpdateUser: (reqData: TUpdateUser) => Promise<TypeDataAPI<TUserList>> = async (reqData) => {
-//     try {
-//         const { data } = await axiosInstance.put(APIPages.PutUpdateUser, reqData);
-//         return data ?? { data: [] as TUserList[] };
+export const fetchUpdateStatus: (
+  id: string,
+  todos: TUpdateTodos
+) => Promise<TypeDataAPI<[]>> = async (id, todos) => {
+  try {
+    const { data } = await axiosInstance.put(APIPages.UpdateTodos + `/${id}`, {
+      todos,
+    });
+    return data ?? { data: [] };
+  } catch (error) {
+    console.error(error);
+    return { data: [] };
+  }
+};
 
-//     } catch (error) {
-//         console.error('Error updating user: ', error);
-//         return { data: [] as TUserList[] };
-//     }
-// };
+export const fetchUpdateTodo: (
+  id: string,
+  todos: TUpdateTodos
+) => Promise<TypeDataAPI<[]>> = async (id, todos) => {
+  try {
+    const { data } = await axiosInstance.put(APIPages.UpdateTodos + `/${id}`, {
+      todos,
+    });
+    return data ?? { data: [] };
+  } catch (error) {
+    console.error(error);
+    return { data: [] };
+  }
+};
 
-// export const fetchDeleteUser: (reqData: TDeleteUser) => Promise<TypeDataAPI<TUserList>> = async (reqData) => {
-//     try {
-//         const { data } = await axiosInstance.put(APIPages.PutDeleteUser, reqData);
-//         return data ?? { data: [] as TUserList[] };
-
-//     } catch (error) {
-//         console.error('Error deleting user: ', error);
-//         return { data: [] as TUserList[] };
-//     }
-// };
+export const fetchDeleteTodo: (id: string) => Promise<TypeDataAPI<[]>> = async (
+  id
+) => {
+  try {
+    const { data } = await axiosInstance.delete(APIPages.UpdateTodos + `/${id}`);
+    return data ?? { data: [] };
+  } catch (error) {
+    console.error(error);
+    return { data: [] };
+  }
+};

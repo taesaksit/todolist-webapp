@@ -7,10 +7,17 @@ import useToast from "./useToast";
 
 // 4. Type
 import { TypeDataAPI } from "@/types/api";
-import { TTodos } from "@/types/todos/todos";
+import { TCraeteTodos, TTodos, TUpdateTodos } from "@/types/todos/todos";
 
 // 5. Service
-import { fetchTotoList } from "@/services/todos/todos.service";
+import {
+  fetchDeleteTodo,
+  fetchPostCreateTodos,
+  fetchTotoList,
+  fetchUpdateStatus,
+  fetchUpdateTodo,
+} from "@/services/todos/todos.service";
+
 // 6. Constants
 import { queryKey } from "@/constants/query-keys";
 
@@ -22,7 +29,6 @@ export const useGetTodoList = () => {
     queryFn: async () => {
       const response = await fetchTotoList();
       if (response.status === "success") {
-        console.log(response.data);
         return response.data;
       } else {
         navigate("/todos");
@@ -34,63 +40,95 @@ export const useGetTodoList = () => {
   });
 };
 
-// export const useCreateUser = () => {
-//   const [userList, setUserList] = useAtom(userListAtom);
-//   const queryClient = useQueryClient();
-//   const { setToastAlert } = useToast();
-//   return useMutation<TypeDataAPI<TUserList>, Error, TUpdateUser>({
-//     mutationFn: fetchPostCreateUser,
-//     onSuccess: (response, variables) => {
-//       if (response && response.status === "success") {
-//         queryClient.invalidateQueries({ queryKey: [queryKey.CRETE_USER] });
-//         setUserList([...userList, variables]);
-//         setToastAlert({ type: "success", message: response.message });
-//       } else {
-//         setToastAlert({ type: "error", message: response.message });
-//       }
-//     },
-//   });
-// };
+export const useCreateTodos = () => {
+  const queryClient = useQueryClient();
+  const { setToastAlert } = useToast();
+  return useMutation<TypeDataAPI<[]>, Error, TCraeteTodos>({
+    mutationFn: fetchPostCreateTodos,
+    onSuccess: (response) => {
+      if (response && response.status === "success") {
+        queryClient.invalidateQueries({ queryKey: [queryKey.GET_TODOS] });
+        setToastAlert({ type: "success", message: response.message });
+      } else {
+        setToastAlert({ type: "error", message: response.message });
+      }
+    },
+  });
+};
 
-// export const useUpdateUser = () => {
-//   const queryClient = useQueryClient();
-//   const [userList, setUserList] = useAtom(userListAtom);
-//   const { setToastAlert } = useToast();
-//   return useMutation<TypeDataAPI<TUserList>, Error, TCreateUser>({
-//     mutationFn: fetchPutUpdateUser,
-//     onSuccess: (response, variables) => {
-//       if (response && response.status === "success") {
-//         queryClient.invalidateQueries({ queryKey: [queryKey.UPDATE_USER] });
-//         const updatedList = userList.map((user) =>
-//           user.employee_id === variables.employee_id ? variables : user
-//         );
-//         setUserList(updatedList);
-//         setToastAlert({ type: "success", message: response.message });
-//       } else {
-//         setToastAlert({ type: "error", message: response.message });
-//       }
-//     },
-//   });
-// };
+export const useUpdateStatus = () => {
+  const queryClient = useQueryClient();
+  const { setToastAlert } = useToast();
 
-// export const useDeleteUser = () => {
-//   const queryClient = useQueryClient();
-//   const [userList, setUserList] = useAtom(userListAtom);
-//   const { setToastAlert } = useToast();
+  return useMutation<
+    TypeDataAPI<[]>,
+    Error,
+    { id: string; todos: TUpdateTodos }
+  >({
+    mutationFn: ({ id, todos }) => fetchUpdateStatus(id, todos),
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        queryClient.invalidateQueries({ queryKey: [queryKey.GET_TODOS] });
+        setToastAlert({
+          type: "success",
+          message: "Status updated successfully!",
+        });
+      } else {
+        setToastAlert({ type: "error", message: response.message });
+      }
+    },
+    onError: () => {
+      setToastAlert({ type: "error", message: "Failed to update status." });
+    },
+  });
+};
 
-//   return useMutation<TypeDataAPI<TUserList>, Error, TDeleteUser>({
-//     mutationFn: fetchDeleteUser,
-//     onSuccess: (response, variables) => {
-//       if (response.status === "success") {
-//         queryClient.invalidateQueries({ queryKey: [queryKey.DELETE_USER] });
-//         const updatedList = userList.filter(
-//           (user) => user.employee_id !== variables.employee_id
-//         );
-//         setUserList(updatedList);
-//         setToastAlert({ type: "success", message: response.message });
-//       } else {
-//         setToastAlert({ type: "error", message: response.message });
-//       }
-//     },
-//   });
-// };
+export const useUpdateTodo = () => {
+  const queryClient = useQueryClient();
+  const { setToastAlert } = useToast();
+
+  return useMutation<
+    TypeDataAPI<[]>,
+    Error,
+    { id: string; todo: TUpdateTodos }
+  >({
+    mutationFn: ({ id, todo }) => fetchUpdateTodo(id, todo),
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        queryClient.invalidateQueries({ queryKey: [queryKey.GET_TODOS] });
+        setToastAlert({
+          type: "success",
+          message: "Task updated successfully!",
+        });
+      } else {
+        setToastAlert({ type: "error", message: response.message });
+      }
+    },
+    onError: () => {
+      setToastAlert({ type: "error", message: "Failed to update status." });
+    },
+  });
+};
+
+export const useDeleteTodo = () => {
+  const queryClient = useQueryClient();
+  const { setToastAlert } = useToast();
+
+  return useMutation<TypeDataAPI<[]>, Error, { id: string }>({
+    mutationFn: ({ id }) => fetchDeleteTodo(id),
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        queryClient.invalidateQueries({ queryKey: [queryKey.GET_TODOS] });
+        setToastAlert({
+          type: "success",
+          message: "Task deleted successfully!",
+        });
+      } else {
+        setToastAlert({ type: "error", message: response.message });
+      }
+    },
+    onError: () => {
+      setToastAlert({ type: "error", message: "Failed to update status." });
+    },
+  });
+};
