@@ -3,13 +3,16 @@ import Todos from "../model/todosModel.js";
 export const getTodos = async (req, res) => {
   try {
     const userId = req.user.id;
-    const priorityOrder = { high: 1, medium: 2, low: 3 };
+
     const todos = await Todos.find({ owner: userId })
       .populate("owner", "firstname")
-      .sort({ updatedAt: -1 })
+      .sort({ 
+        status: -1, // เรียงสถานะ (pending ขึ้นก่อน done)
+        priority: 1, // เรียงตาม priority (high > medium > low)
+        updatedAt: -1 // เรียงตาม updatedAt (ใหม่สุดก่อน)
+      })
       .exec();
-    // เรียง priority ตามลำดับที่ต้องการ (high > medium > low)
-    todos.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
     if (todos.length === 0) {
       return res.json({
         status: "success",
@@ -17,6 +20,7 @@ export const getTodos = async (req, res) => {
         data: {},
       });
     }
+
     res.status(200).json({
       status: "success",
       message: "fetching todo list successfully.",
@@ -26,6 +30,7 @@ export const getTodos = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const createTodo = async (req, res) => {
   try {
