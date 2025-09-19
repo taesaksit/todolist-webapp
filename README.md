@@ -4,8 +4,10 @@
 A simple TODO List app with JWT login, built to practice the MERN stack (MongoDB, Express, React, Node.js).
 
 ## Demo
+<img width="1291" height="932" alt="image" src="https://github.com/user-attachments/assets/abb3c26a-f30d-4bac-a3e3-d9a9fac8acf5" />
+<img width="1291" height="932" alt="image" src="https://github.com/user-attachments/assets/94e5421a-6886-4400-892b-a45824d72e44" />
+<img width="1291" height="932" alt="image" src="https://github.com/user-attachments/assets/37873f5a-de40-4c9b-ba19-00fbb637056e" />
 
-Insert gif or link to demo
 
 ## Run Locally
 
@@ -50,4 +52,21 @@ Insert gif or link to demo
 
 **Server:** Node, Express, MongoDB
 
+
+
+
+
+## Environment for Backend
+
+`PORT = 8000`
+
+`JWT_SECRET = your_jwt_secret_key` 
+
+`MONGO_URL = mongodb://localhost:27017/mydatabase`
+
+`PATH_API = /api`
+
+## Environment for Frontend 
+
+`VITE_BASE_URL = http://localhost:8000/api`
 
