@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import catImage from "../assets/cat cute.jpeg";
 import { handleLogin } from "@/services/login/functions/handle-login";
 
 
@@ -30,8 +29,8 @@ export const Login = () => {
         <form onSubmit={handleSubmit} className="flex flex-col w-full gap-6">
           <div className="flex flex-col items-center gap-4">
             <img
-              src={catImage}
-              alt="Cute Cat"
+              src="https://cdn.pixabay.com/photo/2019/04/25/14/43/workplace-4155023_1280.jpg"
+              alt="login_image"
               className="w-40 h-40 rounded-full object-cover"
             />
             <div className="w-full">

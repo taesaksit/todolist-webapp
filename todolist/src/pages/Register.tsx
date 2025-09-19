@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import catImage from "../assets/cat cute flip.jpg";
 import { handleRegister } from "@/services/register/functions/handle-register";
 
 export const Register = () => {
@@ -30,8 +29,8 @@ export const Register = () => {
         <form onSubmit={handleSubmit} className="flex flex-col w-full gap-6">
           <div className="flex flex-col items-center gap-4">
             <img
-              src={catImage}
-              alt="Cute Cat"
+              src="https://cdn.pixabay.com/photo/2014/02/04/13/17/register-257986_1280.jpg"
+              alt="register_image"
               className="w-40 h-40 rounded-full object-cover"
             />
             <div className="w-full">
